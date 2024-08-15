@@ -6,7 +6,7 @@ cd $REPO_DIR
 VERSION=$(grep -oP '(?<=const std::string OPEN_POSE_VERSION_STRING = ")[^"]*' include/openpose/core/macros.hpp)
 
 # Mount the data folder
-# -v /home/era/code/EasyMocap/data/examples:/home/user/easymocap/EasyMocap/data/examples \
+# -v /home/era/code/EasyMocap/data/examples/revise_two_1_5_seconds:/home/user/easymocap/EasyMocap/data/examples/_data \
 
 docker run \
     --rm \
