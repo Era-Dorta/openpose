@@ -18,5 +18,14 @@ def run_command():
 
     return jsonify({"output": processed_message})
 
+@app.route('/shutdown')
+def shutdown():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+
+    return 'Server shutting down...'
+
 if __name__ == '__main__':
     app.run(port=5001)
