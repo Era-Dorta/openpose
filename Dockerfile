@@ -8,4 +8,4 @@ RUN pip3 install flask && \
 
 COPY flask/flask_entrypoint.py flask/flask_entrypoint.py
 
-CMD ["python3", "flask/flask_entrypoint.py"]
+CMD ["python3", "/openpose/flask/flask_entrypoint.py"]
