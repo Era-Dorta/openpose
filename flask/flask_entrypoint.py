@@ -34,4 +34,5 @@ def shutdown():
     return 'Server shutting down...'
 
 if __name__ == '__main__':
+    os.chdir("/openpose")
     app.run(port=5001)
