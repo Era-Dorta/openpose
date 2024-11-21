@@ -34,5 +34,11 @@ def shutdown():
     return 'Server shutting down...'
 
 if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--openpose_port", type=int)
+    args = parser.parse_args()
+
     os.chdir("/openpose")
-    app.run(port=5001)
+
+    app.run(port=args.openpose_port)

@@ -12,4 +12,4 @@ docker run \
     --rm \
     --network=host \
     --gpus all \
-    eradorta/openpose:$VERSION
+    eradorta/openpose:$VERSION --openpose_port 5001
