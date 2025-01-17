@@ -28,10 +28,9 @@ WORKDIR /openpose/
        
 RUN bash ./scripts/ubuntu/install_deps.sh
 
-# update locations of the files and where to copy them
-COPY ./models/face/pose_iter_116000.caffemodel /openpose/models/face/pose_iter_116000.caffemodel
-COPY ./models/hand/pose_iter_102000.caffemodel /openpose/models/hand/pose_iter_102000.caffemodel
-COPY ./models/pose/body_25/pose_iter_584000.caffemodel /openpose/models/pose/body_25/pose_iter_584000.caffemodel
+# Copy the openpose models
+ARG OPENPOSE_MODELS
+ADD ${OPENPOSE_MODELS} ./models
 
 RUN mkdir -p /openpose/build && \
         cd /openpose/build && \
