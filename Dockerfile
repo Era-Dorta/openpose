@@ -1,11 +1,48 @@
-FROM cwaffles/openpose:latest AS base
+FROM nvidia/cuda:11.1.1-cudnn8-devel-ubuntu20.04
 
+ENV DEBIAN_FRONTEND noninteractive
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES video,compute,utility
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
-RUN pip3 install flask && \
-    mkdir flask
+# Install required Packages
+RUN set -xe && \
+        apt-get update && \
+        apt-get install --no-install-recommends  -y \
+                        git sudo wget \
+                        build-essential \
+                        ffmpeg \
+                        gdebi \
+                        libopencv-dev \
+                        cmake && \
+        apt-get clean && \
+        rm -rf /var/lib/apt/lists/*
 
-COPY flask/flask_entrypoint.py flask/flask_entrypoint.py
+# Build OpenPose
+WORKDIR /
+RUN set -xe && \
+        git clone https://github.com/Era-Dorta/openpose.git
+
+WORKDIR /openpose/
+       
+RUN bash ./scripts/ubuntu/install_deps.sh
+
+# update locations of the files and where to copy them
+COPY ./models/face/pose_iter_116000.caffemodel /openpose/models/face/pose_iter_116000.caffemodel
+COPY ./models/hand/pose_iter_102000.caffemodel /openpose/models/hand/pose_iter_102000.caffemodel
+COPY ./models/pose/body_25/pose_iter_584000.caffemodel /openpose/models/pose/body_25/pose_iter_584000.caffemodel
+
+RUN mkdir -p /openpose/build && \
+        cd /openpose/build && \
+        cmake .. && \
+        make -j$(nproc) && \
+        make install
+
+WORKDIR /usr/local
+RUN set -xe && \
+        ln -s /openpose/build/examples/openpose/openpose.bin /bin/openpose.bin
+
+RUN pip3 install flask
 
 ENTRYPOINT ["python3", "/openpose/flask/flask_entrypoint.py"]
